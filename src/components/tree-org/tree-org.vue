@@ -1,22 +1,8 @@
 <template>
   <div ref="zm-tree-org" class="zm-tree-org">
-    <div
-      ref="zoom"
-      class="zoom-container"
-      :style="zoomStyle"
-      @wheel="zoomWheel"
-    >
-      <zm-draggable
-        :x="left"
-        :y="top"
-        :class="{ dragging: autoDragging }"
-        @dragging="onDrag"
-        @dragstop="onDragStop"
-        :draggable="draggable"
-        :drag-cancel="dragCancel"
-      >
-        <div ref="tree-org" class="tree-org" :class="{horizontal, collapsable}">
-          <tree-org-node
+    <vueScaling style="overflow: hidden" ref="vueScalingRef">
+      <div ref="tree-org" class="tree-org" :class="{horizontal, collapsable}">
+        <tree-org-node
             :data="data"
             :props="keys"
             :key="nodeKey"
@@ -35,17 +21,17 @@
             @on-node-contextmenu="nodeContextmenu"
             @on-node-focus="(e, data) => { $emit('on-node-focus', e, data)}"
             @on-node-blur="handleBlur"
-          >
+        >
           <template v-if="$scopedSlots.default" v-slot="{node}">
             <slot :node="node"></slot>
           </template>
           <template v-if="$scopedSlots.expand" v-slot:expand="{node}">
             <slot name="expand" :node="node"></slot>
           </template>
-          </tree-org-node>
-        </div>
-      </zm-draggable>
-    </div>
+        </tree-org-node>
+      </div>
+    </vueScaling>
+
     <template v-if="tools">
       <div class="zm-tree-handle">
         <div v-if="tools.scale" class="zm-tree-percent">{{zoomPercent}}</div>
@@ -74,7 +60,7 @@
       v-if="nodeDraggable"
       v-show="nodeMoving"
       :props="keys"
-      :data="cloneData" 
+      :data="cloneData"
       :horizontal="horizontal"
       :label-style="labelStyle"
       :collapsable="collapsable"
@@ -111,7 +97,6 @@
 
 <script type="text/babel">
   import render from './node';
-  import zmDraggable from "@/components/zm-draggable"
   import cloneOrg from "@/components/clone-org"
   import ZmContextmenu from "@/components/contextmenu"
   import drag from "@/directives/drag"
@@ -120,7 +105,6 @@
     name: 'ZmTreeOrg',
     components: {
       cloneOrg,
-      zmDraggable,
       ZmContextmenu,
       TreeOrgNode: {
         render,
@@ -362,9 +346,9 @@
         this.menuX = e.clientX;
         this.menuY = e.clientY;
         this.menuData = data;
-        
+
       },
-      zoomWheel(e) {
+    /*  zoomWheel(e) {
         if(!this.scalable) return;
         e.preventDefault();
         // 鼠标滚轮缩放
@@ -374,7 +358,7 @@
           this.enlargeOrgchart();
         }
         this.$emit('on-zoom', this.scale)
-      },
+      },*/
       enlargeOrgchart() {
         if(!this.scalable) return;
         // 鼠标滚轮向上滚动放大

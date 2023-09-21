@@ -4,6 +4,7 @@
 import corePlugin from './plugin/core'
 // 组件
 import ZmTreeOrg from './components/tree-org'
+import vueScaling from 'vue-scaling';
 
 import "@/styles/index.scss";
 const components = [
@@ -14,6 +15,7 @@ const install = function (Vue) {
   components.forEach(component => {
     Vue.component(component.name, component)
   })
+  Vue.use(vueScaling);
   Vue.use(corePlugin)
   Vue.directive('focus',{
     inserted: function(el, { value }){
